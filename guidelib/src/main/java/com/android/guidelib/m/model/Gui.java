@@ -8,4 +8,4 @@ public class Gui{
         public int getLayout() {
             return layout;
         }
-    }
+ }

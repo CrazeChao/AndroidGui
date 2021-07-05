@@ -1,6 +1,7 @@
  package com.android.guidelib.m.model.impl;
  import androidx.annotation.LayoutRes;
 
+ import com.android.guidelib.m.GuiManager;
  import com.android.guidelib.m.model.BaseGuiModel;
  import com.android.guidelib.m.model.Gui;
  import com.android.guidelib.m.model.IGuiUnit;
@@ -13,10 +14,11 @@
  */
 public   class GuiBuilder {
     private List<GuiUnitBuilder> guiUnitBuilderHashMap = new LinkedList<>();
-     public  GuiUnitBuilder createGuiUnit(String key,String version){
-        return new GuiUnitBuilder(this).setKey(key).setVersion(version);
+     public  GuiUnitBuilder createGuiUnit(Class<?> key,String version){
+        return new GuiUnitBuilder(this).setKey(key.getName()).setVersion(version);
      }
-     public void apply(Map map){
+      public void push(){
+         Map map = GuiManager.getG().getMap();
          for (int i = 0; i < guiUnitBuilderHashMap.size(); i++) {
             GuiUnitBuilder guiUnitBuilder =  guiUnitBuilderHashMap.get(i);
             map.put(guiUnitBuilder.key,new BaseGuiModel(guiUnitBuilder));
@@ -69,8 +71,5 @@ public   class GuiBuilder {
     }
 
 
-//    put(String key,BaseGuiModel baseGuiModel){
-//
-//    }
 
 }

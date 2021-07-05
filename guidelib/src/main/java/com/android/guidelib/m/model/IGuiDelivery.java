@@ -5,4 +5,8 @@
  */
  public  interface IGuiDelivery{
     Gui poll();
+    /**
+     * 重置
+     * */
+    void restory();
 }

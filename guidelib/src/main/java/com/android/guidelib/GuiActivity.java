@@ -47,7 +47,14 @@ public class GuiActivity extends AppCompatActivity {
        this.finish();
     }
 
-    public static void into(Activity activity,String key){
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IGuiDelivery model = GuiManager.getG().getGui(getIntent().getStringExtra(simplNameKey));
+        if (model != null)model.restory();
+    }
+
+    public static void into(Activity activity, String key){
         IGuiDelivery model = GuiManager.getG().getGui(key);
         if (model == null)return;
         Intent intent = new Intent(activity,GuiActivity.class);

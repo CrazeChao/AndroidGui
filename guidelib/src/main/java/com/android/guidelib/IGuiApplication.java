@@ -10,19 +10,14 @@ import com.tencent.mmkv.MMKV;
  * Created by lizhichao on 1/22/21
  */
 public interface IGuiApplication{
-    default void create(){
-         setRoot(MMKV.initialize((Context) this));
-    }
     default void setRoot(String root){
         GuiCache.setRoot(root);
-        new GuiBuilder()
-                .createGuiUnit("gui1","1.0.0")
-                .addGui(R.layout.gui_tempo_1)
-                .addGui(R.layout.gui_tempo_2)
-                .commit()
-                .createGuiUnit("gui2","1.0.0")
-                .addGui(R.layout.gui_tempo_3)
-                .commit()
-                .apply(GuiManager.getG().getMap());
+        onGuiBuilder(new GuiBuilder()).push();
+    }
+     GuiBuilder onGuiBuilder(GuiBuilder guiUtils);
+
+
+    default void initGuiApplication(){
+        setRoot(MMKV.initialize((Context) this));
     }
 }

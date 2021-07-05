@@ -8,18 +8,19 @@ import android.view.View;
 
 import com.android.guidelib.GuiJumpHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity2 extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
+
     public void jump(View view){
-        startActivity(new Intent(this,MainActivity2.class));
+        startActivity(new Intent(this,MainActivity.class));
     }
 
     public void showGui(View view){
-        GuiJumpHelper.start(this,MainActivity.class);
+        GuiJumpHelper.start(this,MainActivity2.class);
     }
 }

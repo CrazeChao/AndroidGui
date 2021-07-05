@@ -11,9 +11,7 @@ import java.util.LinkedList;
  *
  */
 public abstract class GuiModel implements IGuiUnit, IGuiDelivery {
-    protected String commitVersion;//提交版本
     protected LinkedList<Gui> mGuiQueue = new LinkedList<>();
-
     public Gui poll(){
         return mGuiQueue.pop();
     }
@@ -24,5 +22,12 @@ public abstract class GuiModel implements IGuiUnit, IGuiDelivery {
         mGuiQueue.clear();
         loading(mGuiQueue);
     }
+
+    @Override
+    public void restory() {
+        init = false;
+        init();
+    }
+
     boolean init = false;
 }
