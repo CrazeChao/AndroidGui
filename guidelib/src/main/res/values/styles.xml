@@ -1,0 +1,21 @@
+<resources>
+
+    <style name="splashTheme" parent="Theme.AppCompat.Light.NoActionBar" mce_bogus="1">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+<!--        <item name="android:windowAnimationStyle">@style/AnimFade</item>-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+
+
+
+
+
+</resources>
