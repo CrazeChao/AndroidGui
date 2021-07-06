@@ -19,4 +19,27 @@
         app:layout_constraintRight_toRightOf="parent"
         android:onClick="emptyClick"
         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="动画2"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="200px"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="42px"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="动画1"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="100px"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="42px"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

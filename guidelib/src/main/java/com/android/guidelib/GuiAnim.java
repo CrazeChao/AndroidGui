@@ -13,12 +13,13 @@
  * Created by lizhichao on 7/6/21
  */
  class GuiAnim  {
-     public static void executeAnim(ViewGroup group) {
+     public static void prepareAnimation(ViewGroup group) {
        List<View> listViews =  filterAnimView(group);
        if (listViews.size() == 0)return;
        group.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
            @Override
            public boolean onPreDraw() {
+               Collections.sort(listViews, (o1, o2) -> Integer.compare((int)o1.getY(),(int)o2.getY()));
                for (int i = 0; i < listViews.size(); i++) {
                    anim(listViews.get(i),i);
                }
@@ -27,12 +28,15 @@
            }
        });
      }
-
-     public static final long delayTime = 500;
-     public static final float hideAlpha = 0f;
+     /*
+      *动画启动间隔
+      * */
+     public static  long animintervalTime = 500;
+     public static  long animDuration = 600;
+     public static  float hideAlpha = 0f;
 
      public static void  anim(View view,int index){
-         long currentStartDelayTime = delayTime*index;
+         long currentStartDelayTime = animintervalTime*index;
          String data = (String)view.getTag();
          int inval = 100;
          try {
@@ -44,17 +48,17 @@
          view.setTranslationY(startTranslationY);
          view.setAlpha(hideAlpha);
          view.animate().translationY(endTranlationy).alpha(1).setInterpolator(getDefaultInterception()).setStartDelay(currentStartDelayTime)
-                 .setDuration(600).start();
+                 .setDuration(animDuration).start();
      }
 
      private static List<View> filterAnimView(ViewGroup group) {
          List<View> textViews = new ArrayList<>();
          for (int i = 0; i < group.getChildCount(); i++) {
-             if (group.getChildAt(i) instanceof TextView){
+             if (group.getChildAt(i) instanceof TextView && group.getChildAt(i).getAlpha() >= 1){
                  textViews.add(group.getChildAt(i));
              }
          }
-         Collections.sort(textViews, (o1, o2) -> Integer.compare((int)o1.getTranslationY(),(int)o2.getTranslationY()));
+
          return textViews;
      }
 

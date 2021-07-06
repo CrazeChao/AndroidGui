@@ -27,3 +27,14 @@ BaseApplication extends Application implements IGuiApplication{
 
 第三步
         GuiJumpHelper.start(activity ,？.class);
+
+
+
+设置：
+     1 设置View 之间动画启动间隔
+       IGuiApplication.setGuiUnitAnimStartIntervalTime
+     2 设置每个view 场景过度时长
+       IGuiApplication.setGuiUnitAnimDuration
+
+     3 定制View轨迹长度
+       在xml中用  android:tag="100" 单位：时间戳

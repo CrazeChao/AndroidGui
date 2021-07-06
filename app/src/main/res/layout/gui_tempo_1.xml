@@ -20,18 +20,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:onClick="onStartNext"
         />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="动画1"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="100px"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textSize="42px"
-        android:tag="1000"
-        />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,6 +32,28 @@
         app:layout_constraintTop_toTopOf="parent"
         android:textSize="42px"
         />
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="动画1"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="100px"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="42px"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="动画3"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="250px"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="42px"
+        android:alpha="0"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

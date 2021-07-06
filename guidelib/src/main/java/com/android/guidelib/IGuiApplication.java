@@ -14,10 +14,17 @@ public interface IGuiApplication{
         GuiCache.setRoot(root);
         onGuiBuilder(new GuiBuilder()).push();
     }
-     GuiBuilder onGuiBuilder(GuiBuilder guiUtils);
 
+    GuiBuilder onGuiBuilder(GuiBuilder guiUtils);
 
     default void initGuiApplication(){
         setRoot(MMKV.initialize((Context) this));
+    }
+
+    default void setGuiUnitAnimDuration(long unitAnimDuration){
+        GuiAnim.animDuration = unitAnimDuration;
+    }
+    default void setGuiUnitAnimStartIntervalTime(long guiAnimStartIntervalTime){
+        GuiAnim.animintervalTime = guiAnimStartIntervalTime;
     }
 }

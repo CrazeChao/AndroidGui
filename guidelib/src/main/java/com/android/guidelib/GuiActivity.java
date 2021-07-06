@@ -28,8 +28,7 @@ public class GuiActivity extends AppCompatActivity {
         if (model == null) setContentView(R.layout.gui_error);
         int layout = model.poll().getLayout();
         setContentView(layout);
-        ViewGroup viewGroup = getDelegate().findViewById(android.R.id.content);
-        GuiAnim.executeAnim((ViewGroup) viewGroup.getChildAt(0));
+        prepareAnimation();
     }
 
 
@@ -38,10 +37,16 @@ public class GuiActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         IGuiDelivery model = GuiManager.getG().getGui(getIntent().getStringExtra(simplNameKey));
-        if (model == null) setContentView(R.layout.gui_error);
+        if (model == null) {
+            setContentView(R.layout.gui_error);
+            return;
+        }
         setContentView(model.poll().getLayout());
+        prepareAnimation();
+    }
+    private void prepareAnimation() {
         ViewGroup viewGroup = getDelegate().findViewById(android.R.id.content);
-        GuiAnim.executeAnim((ViewGroup) viewGroup.getChildAt(0));
+        GuiAnim.prepareAnimation((ViewGroup) viewGroup.getChildAt(0));
     }
 
     public void onStartNext(View view){
@@ -50,9 +55,23 @@ public class GuiActivity extends AppCompatActivity {
     public void emptyClick(View view){
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     public void onCommit(View view){
        GuiManager.getG().commit(getIntent().getStringExtra(simplNameKey));
-       this.finish();
+       getDelegate().findViewById(android.R.id.content).animate().alpha(0).setDuration(300).setInterpolator(GuiAnim.getDefaultInterception()).withEndAction(new Runnable() {
+           @Override
+           public void run() {
+               overridePendingTransition(-1,-1);
+               GuiActivity.this.finish();
+           }
+       });
+
+
     }
 
     @Override
