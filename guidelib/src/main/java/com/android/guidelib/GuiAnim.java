@@ -14,6 +14,7 @@
  */
  class GuiAnim  {
      public static void prepareAnimation(ViewGroup group) {
+       View converView = group.findViewById(R.id.gui_cover);
        List<View> listViews =  filterAnimView(group);
        if (listViews.size() == 0)return;
        group.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -23,7 +24,13 @@
                for (int i = 0; i < listViews.size(); i++) {
                    anim(listViews.get(i),i);
                }
-               group.getViewTreeObserver().removeOnPreDrawListener(this);
+               if (converView != null){
+                   float coverAlpha = converView.getAlpha();
+                   converView.setAlpha(0);
+                   converView.animate().alpha(coverAlpha).setInterpolator(getDefaultInterception()).setDuration(500);
+                   group.getViewTreeObserver().removeOnPreDrawListener(this);
+               }
+
                return false;
            }
        });

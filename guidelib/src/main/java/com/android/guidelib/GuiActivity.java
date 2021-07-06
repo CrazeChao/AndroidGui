@@ -61,7 +61,7 @@ public class GuiActivity extends AppCompatActivity {
 
     public void onCommit(View view){
        GuiManager.getG().commit(getIntent().getStringExtra(simplNameKey));
-       getDelegate().findViewById(android.R.id.content).animate().alpha(0).setDuration(300).setInterpolator(GuiAnim.getDefaultInterception()).withEndAction(new Runnable() {
+       getDelegate().findViewById(android.R.id.content).animate().alpha(0).setDuration(500).setInterpolator(GuiAnim.getDefaultInterception()).withEndAction(new Runnable() {
            @Override
            public void run() {
                overridePendingTransition(-1,-1);
