@@ -6,6 +6,6 @@
  */
 public class GuiJumpHelper {
     public static void start(Activity activity, Class<?> key){
-        GuiActivity.into(activity,key.getName());
+        GuiActivity.laucher(activity,key.getName());
     }
 }

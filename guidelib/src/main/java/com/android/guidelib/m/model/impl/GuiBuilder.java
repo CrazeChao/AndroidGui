@@ -5,6 +5,8 @@
  import com.android.guidelib.m.model.BaseGuiModel;
  import com.android.guidelib.m.model.Gui;
  import com.android.guidelib.m.model.IGuiUnit;
+
+ import java.util.LinkedHashSet;
  import java.util.LinkedList;
  import java.util.List;
  import java.util.Map;
@@ -28,7 +30,7 @@ public   class GuiBuilder {
 
     public class GuiUnitBuilder implements IGuiUnit {
         GuiBuilder guiBuilder;
-        LinkedList<Gui> guiList = new LinkedList<>();
+        LinkedHashSet<Gui> guiList = new LinkedHashSet<>();
         String version;
         String key;
 

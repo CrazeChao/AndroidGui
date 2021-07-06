@@ -37,4 +37,4 @@ BaseApplication extends Application implements IGuiApplication{
        IGuiApplication.setGuiUnitAnimDuration
 
      3 定制View轨迹长度
-       在xml中用  android:tag="100" 单位：时间戳
+       在xml中用  android:tag="100" 单位：像素

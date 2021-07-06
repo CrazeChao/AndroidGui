@@ -19,7 +19,6 @@ import com.tencent.mmkv.MMKV;
 public class GuiActivity extends AppCompatActivity {
     private static final String simplNameKey = "SimpleName";
     private static final int recultCode_DISS = 0x100;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -30,8 +29,6 @@ public class GuiActivity extends AppCompatActivity {
         setContentView(layout);
         prepareAnimation();
     }
-
-
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -44,6 +41,7 @@ public class GuiActivity extends AppCompatActivity {
         setContentView(model.poll().getLayout());
         prepareAnimation();
     }
+
     private void prepareAnimation() {
         ViewGroup viewGroup = getDelegate().findViewById(android.R.id.content);
         GuiAnim.prepareAnimation((ViewGroup) viewGroup.getChildAt(0));
@@ -88,6 +86,16 @@ public class GuiActivity extends AppCompatActivity {
         intent.putExtra(simplNameKey,key);
         activity.startActivity(intent);
         activity.overridePendingTransition(-1,-1);
+    }
+    public static void laucher(Activity activity, String key){
+        if (activity instanceof GuiActivity)return;//防止重复启动
+        IGuiDelivery model = GuiManager.getG().getGui(key);
+        if (model == null)return;
+        Intent intent = new Intent(activity,GuiActivity.class);
+        intent.putExtra(simplNameKey,key);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.guide_in,R.anim.guide_out);
+        //启动
     }
 
     @Override
