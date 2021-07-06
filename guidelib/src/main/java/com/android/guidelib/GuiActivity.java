@@ -40,6 +40,8 @@ public class GuiActivity extends AppCompatActivity {
         IGuiDelivery model = GuiManager.getG().getGui(getIntent().getStringExtra(simplNameKey));
         if (model == null) setContentView(R.layout.gui_error);
         setContentView(model.poll().getLayout());
+        ViewGroup viewGroup = getDelegate().findViewById(android.R.id.content);
+        GuiAnim.executeAnim((ViewGroup) viewGroup.getChildAt(0));
     }
 
     public void onStartNext(View view){

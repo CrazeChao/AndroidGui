@@ -17,8 +17,8 @@
      public GuiBuilder onGuiBuilder(GuiBuilder guiBuilder) {
        return guiBuilder
                 .createGuiUnit(MainActivity.class,"1.0.1")
-                 .addGui(R.layout.gui_tempo_1)
                  .addGui(R.layout.gui_tempo_2)
+               .addGui(R.layout.gui_tempo_1)
                  .addGui(R.layout.gui_tempo_3)
                  .commit()
           .createGuiUnit(MainActivity2.class,"1.0.1")
@@ -26,7 +26,6 @@
                  .addGui(R.layout.gui_tempo_2)
                  .addGui(R.layout.gui_tempo_3)
                  .commit();
-
      }
 
  }
