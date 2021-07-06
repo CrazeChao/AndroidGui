@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.android.guidelib.m.GuiManager;
@@ -25,8 +26,13 @@ public class GuiActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         IGuiDelivery model = GuiManager.getG().getGui(getIntent().getStringExtra(simplNameKey));
         if (model == null) setContentView(R.layout.gui_error);
-        setContentView(model.poll().getLayout());
+        int layout = model.poll().getLayout();
+        setContentView(layout);
+        ViewGroup viewGroup = getDelegate().findViewById(android.R.id.content);
+        GuiAnim.executeAnim((ViewGroup) viewGroup.getChildAt(0));
     }
+
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -60,6 +66,7 @@ public class GuiActivity extends AppCompatActivity {
         Intent intent = new Intent(activity,GuiActivity.class);
         intent.putExtra(simplNameKey,key);
         activity.startActivity(intent);
+        activity.overridePendingTransition(-1,-1);
     }
 
     @Override
