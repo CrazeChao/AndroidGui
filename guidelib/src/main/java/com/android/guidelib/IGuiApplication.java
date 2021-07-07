@@ -42,7 +42,7 @@ public interface IGuiApplication{
      * gui转场 旧的 即将退出的gui页面
      * */
     default IGuiAnimationStrategy onGuiTransitionsAnimExitStrategyPrepare(){
-        return new EmptyStrategy();
+        return new EmptyStrategy(); //new EmptyStrategy(); //new LavaGuiAnimStrategy(500,800,true);
     }
 
 

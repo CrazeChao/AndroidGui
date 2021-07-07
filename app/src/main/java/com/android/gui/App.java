@@ -13,16 +13,15 @@
          super.onCreate();
          initGuiApplication();
      }
-
      @Override
      public GuiBuilder onGuiBuilder(GuiBuilder guiBuilder) {
        return guiBuilder
-                .createGuiUnit(MainActivity.class,"1.0.3")
+                .createGuiUnit(MainActivity.class,"1.0.5")
                .addGui(R.layout.gui_tempo_1)
                  .addGui(R.layout.gui_tempo_2)
                  .addGui(R.layout.gui_tempo_3)
                  .commit()
-          .createGuiUnit(MainActivity2.class,"1.0.3")
+          .createGuiUnit(MainActivity2.class,"1.0.5")
                  .addGui(R.layout.gui_tempo_1)
                  .addGui(R.layout.gui_tempo_2)
                  .addGui(R.layout.gui_tempo_3)

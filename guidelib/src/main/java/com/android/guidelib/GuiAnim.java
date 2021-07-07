@@ -28,10 +28,12 @@
 
      public static void prepareTransitionExitAnim(ViewGroup group, OnAnimEndListener endAction) {
          prepareAnim(group, mStrategyFactory.getStrategy(StrategyFactory.Strate.TRANSITIONS_EXIT), getSafetyAnimEndListener(endAction) );
+         group.requestLayout();
      }
 
      public static void prepareTransitionEnterAnim(ViewGroup group, OnAnimEndListener endAction) {
          prepareAnim(group, mStrategyFactory.getStrategy(StrategyFactory.Strate.TRANSITIONS_ENTER),getSafetyAnimEndListener(endAction) );
+         group.requestLayout();
      }
 
 

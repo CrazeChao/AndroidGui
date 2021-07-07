@@ -29,12 +29,11 @@ BaseApplication extends Application implements IGuiApplication{
         GuiJumpHelper.start(activity ,？.class);
 
 
-
 设置：
-     1 设置View 之间动画启动间隔
-       IGuiApplication.setGuiUnitAnimStartIntervalTime
-     2 设置每个view 场景过度时长
-       IGuiApplication.setGuiUnitAnimDuration
+        动画设置面向策略工厂
+        分四个策略
+           1 启动gui流程的 动画车略
+           2 关闭gui流程的动画策略
+           3 gui切换旧的页面动画策略
+           4 gui切换新页面动画策略
 
-     3 定制View轨迹长度
-       在xml中用  android:tag="100" 单位：像素

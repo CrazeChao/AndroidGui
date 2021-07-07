@@ -8,14 +8,19 @@
   * 拿火第一版策略
   *decoration
   * 只有控件透明度和 控件移动的动画
+  * 反向
  */
 public   class LavaGuiAnimStrategy implements IGuiAnimationStrategy   {
      public  long animintervalTime;
      public  long animDuration;
-
-     public LavaGuiAnimStrategy(long animintervalTime, long animDuration) {
+     public boolean isReverse = false;
+     public LavaGuiAnimStrategy(long animintervalTime, long animDuration,boolean isReverse) {
          this.animintervalTime = animintervalTime;
          this.animDuration = animDuration;
+         this.isReverse = isReverse;
+     }
+     public LavaGuiAnimStrategy(long animintervalTime, long animDuration) {
+        this(animintervalTime,animDuration,false);
      }
 
      @Override
@@ -32,9 +37,23 @@ public   class LavaGuiAnimStrategy implements IGuiAnimationStrategy   {
              inval = Integer.parseInt(data);
          } catch (NumberFormatException numberFormatException) {
          }
+
+
          float startTranslation_Y = view.getTranslationY() + inval;
          float endTranslation_Y = view.getTranslationY();
          float alpha = view.getAlpha();
+         if (isReverse){
+             view.setTranslationY(endTranslation_Y);
+             view.setAlpha(alpha);
+             view.animate().translationY(startTranslation_Y).alpha(0).setInterpolator(CustomAnim.getDefaultInterception()).setStartDelay(currentStartDelayTime)
+                     .setDuration(animDuration).withEndAction(() -> {
+                 if (endAction == null)return;
+                 endAction.onEnd(view);
+             }).start();
+
+             return;
+         }
+
          view.setTranslationY(startTranslation_Y);
          view.setAlpha(0f);
          view.animate().translationY(endTranslation_Y).alpha(alpha).setInterpolator(CustomAnim.getDefaultInterception()).setStartDelay(currentStartDelayTime)
@@ -47,6 +66,9 @@ public   class LavaGuiAnimStrategy implements IGuiAnimationStrategy   {
 
      @Override
      public int calculateWeight(View view) {
+         if (isReverse){
+             return -(int)view.getY();
+         }
          return (int)view.getY();
      }
  }
