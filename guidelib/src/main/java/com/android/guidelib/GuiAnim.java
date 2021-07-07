@@ -14,25 +14,29 @@
  */
  class GuiAnim {
      private final static  StrategyFactory mStrategyFactory = new StrategyFactory();
+
      public static StrategyFactory getStrategyFactory() {
+         if (GuiJumpHelper.mStrategyUnitFactory != null){
+             return  GuiJumpHelper.mStrategyUnitFactory;
+         }
          return mStrategyFactory;
      }
 
      public static void prepareEnterAnimation(ViewGroup group, OnAnimEndListener endAction) {
-         prepareAnim(group, mStrategyFactory.getStrategy(StrategyFactory.Strate.ENTER), getSafetyAnimEndListener(endAction) );
+         prepareAnim(group, getStrategyFactory().getStrategy(StrategyFactory.Strate.ENTER), getSafetyAnimEndListener(endAction) );
      }
 
      public static void prepareExitAnim(ViewGroup group, OnAnimEndListener endAction) {
-         prepareAnim(group, mStrategyFactory.getStrategy(StrategyFactory.Strate.EXIT), getSafetyAnimEndListener(endAction));
+         prepareAnim(group, getStrategyFactory().getStrategy(StrategyFactory.Strate.EXIT), getSafetyAnimEndListener(endAction));
      }
 
      public static void prepareTransitionExitAnim(ViewGroup group, OnAnimEndListener endAction) {
-         prepareAnim(group, mStrategyFactory.getStrategy(StrategyFactory.Strate.TRANSITIONS_EXIT), getSafetyAnimEndListener(endAction) );
+         prepareAnim(group, getStrategyFactory().getStrategy(StrategyFactory.Strate.TRANSITIONS_EXIT), getSafetyAnimEndListener(endAction) );
          group.requestLayout();
      }
 
      public static void prepareTransitionEnterAnim(ViewGroup group, OnAnimEndListener endAction) {
-         prepareAnim(group, mStrategyFactory.getStrategy(StrategyFactory.Strate.TRANSITIONS_ENTER),getSafetyAnimEndListener(endAction) );
+         prepareAnim(group, getStrategyFactory().getStrategy(StrategyFactory.Strate.TRANSITIONS_ENTER),getSafetyAnimEndListener(endAction) );
          group.requestLayout();
      }
 
