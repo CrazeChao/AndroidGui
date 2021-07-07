@@ -1,84 +1,132 @@
  package com.android.guidelib;
- import android.graphics.Path;
  import android.view.View;
  import android.view.ViewGroup;
  import android.view.ViewTreeObserver;
- import android.view.animation.Interpolator;
- import android.view.animation.PathInterpolator;
- import android.widget.TextView;
- import java.util.ArrayList;
+ import com.android.guidelib.strategy.IGuiAnimationStrategy;
+ import com.android.guidelib.strategy.OnAnimEndListener;
+ import com.android.guidelib.strategy.StrategyFactory;
  import java.util.Collections;
+ import java.util.LinkedList;
  import java.util.List;
+ import java.util.Queue;
  /**
  * Created by lizhichao on 7/6/21
  */
- class GuiAnim  {
-     public static void prepareAnimation(ViewGroup group) {
-       View converView = group.findViewById(R.id.gui_cover);
-       List<View> listViews =  filterAnimView(group);
-       if (listViews.size() == 0)return;
-       group.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-           @Override
-           public boolean onPreDraw() {
-               Collections.sort(listViews, (o1, o2) -> Integer.compare((int)o1.getY(),(int)o2.getY()));
-               for (int i = 0; i < listViews.size(); i++) {
-                   anim(listViews.get(i),i);
-               }
-               if (converView != null){
-                   float coverAlpha = converView.getAlpha();
-                   converView.setAlpha(0);
-                   converView.animate().alpha(coverAlpha).setInterpolator(getDefaultInterception()).setDuration(500);
-                   group.getViewTreeObserver().removeOnPreDrawListener(this);
-               }
-
-               return false;
-           }
-       });
+ class GuiAnim {
+     private final static  StrategyFactory mStrategyFactory = new StrategyFactory();
+     public static StrategyFactory getStrategyFactory() {
+         return mStrategyFactory;
      }
-     /*
-      *动画启动间隔
-      * */
-     public static  long animintervalTime = 500;
-     public static  long animDuration = 600;
-     public static  float hideAlpha = 0f;
 
-     public static void  anim(View view,int index){
-         long currentStartDelayTime = animintervalTime*index;
-         String data = (String)view.getTag();
-         int inval = 100;
-         try {
-             inval = Integer.parseInt(data);
-         }catch (NumberFormatException numberFormatException){
+     public static void prepareEnterAnimation(ViewGroup group, OnAnimEndListener endAction) {
+         prepareAnim(group, mStrategyFactory.getStrategy(StrategyFactory.Strate.ENTER), getSafetyAnimEndListener(endAction) );
+     }
+
+     public static void prepareExitAnim(ViewGroup group, OnAnimEndListener endAction) {
+         prepareAnim(group, mStrategyFactory.getStrategy(StrategyFactory.Strate.EXIT), getSafetyAnimEndListener(endAction));
+     }
+
+     public static void prepareTransitionExitAnim(ViewGroup group, OnAnimEndListener endAction) {
+         prepareAnim(group, mStrategyFactory.getStrategy(StrategyFactory.Strate.TRANSITIONS_EXIT), getSafetyAnimEndListener(endAction) );
+     }
+
+     public static void prepareTransitionEnterAnim(ViewGroup group, OnAnimEndListener endAction) {
+         prepareAnim(group, mStrategyFactory.getStrategy(StrategyFactory.Strate.TRANSITIONS_ENTER),getSafetyAnimEndListener(endAction) );
+     }
+
+
+
+     public static void animSalfeEnd(View view, OnAnimEndListener endListener) {
+         if (endListener == null) return;
+         endListener.onEnd(view);
+     }
+     public static OnAnimEndListener getSafetyAnimEndListener(OnAnimEndListener endAction){
+         if (endAction == null){
+             return view -> {
+
+             };
          }
-         float startTranslationY = view.getTranslationY()+inval;
-         float endTranlationy = view.getTranslationY();
-         view.setTranslationY(startTranslationY);
-         view.setAlpha(hideAlpha);
-         view.animate().translationY(endTranlationy).alpha(1).setInterpolator(getDefaultInterception()).setStartDelay(currentStartDelayTime)
-                 .setDuration(animDuration).start();
+         return endAction;
      }
 
-     private static List<View> filterAnimView(ViewGroup group) {
-         List<View> textViews = new ArrayList<>();
+     public static void prepareAnim(ViewGroup group, IGuiAnimationStrategy iGuiAnimationStrategy, OnAnimEndListener endAction) {
+         List<View> views = filterAnimView(group, iGuiAnimationStrategy);
+         if (views.size() == 0) {
+             animSalfeEnd(group, endAction);
+             return;
+         }
+
+         AnimEndVisitor animEndVisitor = new AnimEndVisitor(group,endAction);
+         group.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+             @Override
+             public boolean onPreDraw() {
+                 Collections.sort(views, (o1, o2) -> Integer.compare(iGuiAnimationStrategy.calculateWeight(o1), iGuiAnimationStrategy.calculateWeight(o2)));
+                 for (int i = 0; i < views.size(); i++) {
+                     View view = views.get(i);
+                     AnimEndPart animEndPart = new AnimEndPart(endAction);
+                     animEndPart.accept(animEndVisitor);
+                     iGuiAnimationStrategy.executionAndBuildAnimation(i, view.getX(), view.getY(), view,animEndPart); //计数器
+                 }
+                 group.getViewTreeObserver().removeOnPreDrawListener(this);
+                 return false;
+             }
+         });
+     }
+     private static List<View> filterAnimView(ViewGroup group, IGuiAnimationStrategy iGuiAnimationStrategy) {
+         List<View> textViews = new LinkedList<>();
          for (int i = 0; i < group.getChildCount(); i++) {
-             if (group.getChildAt(i) instanceof TextView && group.getChildAt(i).getAlpha() >= 1){
-                 textViews.add(group.getChildAt(i));
+             View childView = group.getChildAt(i);
+             if (iGuiAnimationStrategy.filter(childView)) {
+                 textViews.add(childView);
              }
          }
-
+         View rootView = group.findViewById(R.id.gui_root);
+         if (iGuiAnimationStrategy.filter(rootView)) {
+             textViews.add(rootView);
+         }
          return textViews;
      }
 
+     public static class AnimEndPart implements OnAnimEndListener {
+         OnAnimEndListener animEndListener;
+         AnimEndVisitor animEndVisitor;
 
-     public static Path getDefaultPath(){
-         Path path = new Path();
-         path.moveTo(0, 0);
-         path.cubicTo(0.25f, 0.1f, 0.25f, 1f, 1f, 1f);
-         return path;
-     }
-     public static Interpolator getDefaultInterception(){
-         return new PathInterpolator(getDefaultPath());
+         public AnimEndPart(OnAnimEndListener animEndListener) {
+             this.animEndListener = animEndListener;
+         }
+
+         @Override
+         public void onEnd(View view) {
+             animEndListener.onEnd(view);
+             animEndVisitor.onEnd(view);
+         }
+
+         public void accept(AnimEndVisitor animEndVisitor) {
+             animEndVisitor.onVisitor(this);
+             this.animEndVisitor = animEndVisitor;
+         }
      }
 
+     public static class AnimEndVisitor implements OnAnimEndListener {
+         ViewGroup viewGroup;
+         OnAnimEndListener onAnimLastListener;//当所有动画执行完毕后的回掉
+         Queue<AnimEndPart> animEndParts = new LinkedList<>();
+         public AnimEndVisitor(ViewGroup viewGroup, OnAnimEndListener onAnimLastListener) {
+             this.viewGroup = viewGroup;
+             this.onAnimLastListener = onAnimLastListener;
+         }
+
+         void onVisitor(AnimEndPart animEndPart) {
+             animEndParts.add(animEndPart);
+         }
+
+         @Override
+         public void onEnd(View view) {
+             animEndParts.poll();
+             if (animEndParts.size() == 0) {
+                 onAnimLastListener.onEnd(viewGroup);
+             }
+         }
+     }
 
  }

@@ -1,8 +1,6 @@
 package com.android.guidelib;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,15 +8,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-
 import com.android.guidelib.m.GuiManager;
-import com.android.guidelib.m.GuiModel;
 import com.android.guidelib.m.model.IGuiDelivery;
-import com.tencent.mmkv.MMKV;
-
 public class GuiActivity extends AppCompatActivity {
     private static final String simplNameKey = "SimpleName";
     private static final int recultCode_DISS = 0x100;
+    ViewGroup mViewGroup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -27,7 +22,7 @@ public class GuiActivity extends AppCompatActivity {
         if (model == null) setContentView(R.layout.gui_error);
         int layout = model.poll().getLayout();
         setContentView(layout);
-        prepareAnimation();
+        prepareEnterAnimation();
     }
 
     @Override
@@ -39,18 +34,29 @@ public class GuiActivity extends AppCompatActivity {
             return;
         }
         setContentView(model.poll().getLayout());
-        prepareAnimation();
+        initViewGroup();
+        GuiAnim.prepareTransitionEnterAnim(mViewGroup,null);
+    }
+    void initViewGroup(){
+        mViewGroup = getDelegate().findViewById(R.id.gui_root);
     }
 
-    private void prepareAnimation() {
-        ViewGroup viewGroup = getDelegate().findViewById(android.R.id.content);
-        GuiAnim.prepareAnimation((ViewGroup) viewGroup.getChildAt(0));
+    private void prepareEnterAnimation() {
+        initViewGroup();
+        GuiAnim.prepareEnterAnimation(mViewGroup,null);
     }
 
-    public void onStartNext(View view){
-        into(this,getIntent().getStringExtra(simplNameKey));
+    public void onStartNext(View view) {
+        initViewGroup();
+        GuiAnim.prepareTransitionExitAnim(mViewGroup, resultView -> {
+            if (resultView == mViewGroup){
+                overridePendingTransition(-1, -1);
+                into(GuiActivity.this, getIntent().getStringExtra(simplNameKey));
+            }
+        });
     }
-    public void emptyClick(View view){
+
+    public void emptyClick(View view) {
 
     }
 
@@ -59,42 +65,41 @@ public class GuiActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    public void onCommit(View view){
-       GuiManager.getG().commit(getIntent().getStringExtra(simplNameKey));
-       getDelegate().findViewById(android.R.id.content).animate().alpha(0).setDuration(500).setInterpolator(GuiAnim.getDefaultInterception()).withEndAction(new Runnable() {
-           @Override
-           public void run() {
-               overridePendingTransition(-1,-1);
-               GuiActivity.this.finish();
-           }
-       });
-
-
+    public void onCommit(View view) {
+        GuiManager.getG().commit(getIntent().getStringExtra(simplNameKey));
+        initViewGroup();
+        GuiAnim.prepareExitAnim(mViewGroup,resultView ->{
+            if (resultView == mViewGroup){
+                overridePendingTransition(-1, -1);
+                GuiActivity.this.finish();
+            }
+        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         IGuiDelivery model = GuiManager.getG().getGui(getIntent().getStringExtra(simplNameKey));
-        if (model != null)model.restory();
+        if (model != null) model.restory();
     }
 
-    public static void into(Activity activity, String key){
+    public static void into(Activity activity, String key) {
         IGuiDelivery model = GuiManager.getG().getGui(key);
-        if (model == null)return;
-        Intent intent = new Intent(activity,GuiActivity.class);
-        intent.putExtra(simplNameKey,key);
+        if (model == null) return;
+        Intent intent = new Intent(activity, GuiActivity.class);
+        intent.putExtra(simplNameKey, key);
         activity.startActivity(intent);
-        activity.overridePendingTransition(-1,-1);
+        activity.overridePendingTransition(-1, -1);
     }
-    public static void laucher(Activity activity, String key){
-        if (activity instanceof GuiActivity)return;//防止重复启动
+
+    public static void laucher(Activity activity, String key) {
+        if (activity instanceof GuiActivity) return;
         IGuiDelivery model = GuiManager.getG().getGui(key);
-        if (model == null)return;
-        Intent intent = new Intent(activity,GuiActivity.class);
-        intent.putExtra(simplNameKey,key);
+        if (model == null) return;
+        Intent intent = new Intent(activity, GuiActivity.class);
+        intent.putExtra(simplNameKey, key);
         activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.guide_in,R.anim.guide_out);
+        activity.overridePendingTransition(-1, -1);
         //启动
     }
 
@@ -106,7 +111,7 @@ public class GuiActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == recultCode_DISS){
+        if (requestCode == recultCode_DISS) {
             this.finish();
             setResult(recultCode_DISS);
         }
