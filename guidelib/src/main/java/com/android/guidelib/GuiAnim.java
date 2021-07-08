@@ -28,6 +28,7 @@
 
      public static void prepareExitAnim(ViewGroup group, OnAnimEndListener endAction) {
          prepareAnim(group, getStrategyFactory().getStrategy(StrategyFactory.Strate.EXIT), getSafetyAnimEndListener(endAction));
+         group.requestLayout();
      }
 
      public static void prepareTransitionExitAnim(ViewGroup group, OnAnimEndListener endAction) {
