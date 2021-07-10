@@ -96,7 +96,9 @@ public class GuiActivity extends AppCompatActivity {
         if (activity instanceof GuiActivity) return;
         IGuiDelivery model = GuiManager.getG().getGui(key);
         if (model == null) return;
-        onGuiRun.run();
+        if (onGuiRun != null){
+            onGuiRun.run();
+        }
         Intent intent = new Intent(activity, GuiActivity.class);
         intent.putExtra(simplNameKey, key);
         activity.startActivity(intent);
