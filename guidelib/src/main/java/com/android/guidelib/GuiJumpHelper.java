@@ -5,14 +5,19 @@
  * Created by lizhichao on 6/23/21
   * 开启效果
  */
-public class GuiJumpHelper {
-    static StrategyFactory mStrategyUnitFactory;
+ public class GuiJumpHelper {
+     static StrategyFactory mStrategyUnitFactory;
 
-    public static void start(Activity activity, Class<?> key, StrategyFactory mStrategyUnitFactory){
-        GuiJumpHelper.mStrategyUnitFactory = mStrategyUnitFactory;
-        GuiActivity.laucher(activity,key.getName());
-    }
-     public static void start(Activity activity, Class<?> key){
-        start(activity,key,null);
+     public static void start(Activity activity, Class<?> key,StrategyFactory mStrategyUnitFactory ,Runnable onGuiRun) {
+         GuiJumpHelper.mStrategyUnitFactory = mStrategyUnitFactory;
+         GuiActivity.laucher(activity, key.getName(), onGuiRun);
      }
-}
+
+     public static void start(Activity activity, Class<?> key) {
+         start(activity, key, null);
+     }
+
+     public static void start(Activity activity, Class<?> key, Runnable onGuiRun) {
+         start(activity, key, null,onGuiRun);
+     }
+ }

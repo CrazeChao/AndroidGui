@@ -92,10 +92,11 @@ public class GuiActivity extends AppCompatActivity {
         activity.overridePendingTransition(-1, -1);
     }
 
-    public static void laucher(Activity activity, String key) {
+    public static void laucher(Activity activity, String key,Runnable onGuiRun) {
         if (activity instanceof GuiActivity) return;
         IGuiDelivery model = GuiManager.getG().getGui(key);
         if (model == null) return;
+        onGuiRun.run();
         Intent intent = new Intent(activity, GuiActivity.class);
         intent.putExtra(simplNameKey, key);
         activity.startActivity(intent);
