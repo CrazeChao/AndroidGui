@@ -8,16 +8,22 @@
  public class GuiJumpHelper {
      static StrategyFactory mStrategyUnitFactory;
 
-     public static void start(Activity activity, Class<?> key,StrategyFactory mStrategyUnitFactory ,Runnable onGuiRun) {
+     public static void start(Activity activity, Class<?> key,StrategyFactory mStrategyUnitFactory ,OnGuiStartListener onGuiRun) {
          GuiJumpHelper.mStrategyUnitFactory = mStrategyUnitFactory;
-         GuiActivity.laucher(activity, key.getName(), onGuiRun);
+         GuiActivity.launcher(activity, key.getName(), onGuiRun);
      }
 
      public static void start(Activity activity, Class<?> key) {
          start(activity, key, null);
      }
 
-     public static void start(Activity activity, Class<?> key, Runnable onGuiRun) {
+     public static void start(Activity activity, Class<?> key, OnGuiStartListener onGuiRun) {
          start(activity, key, null,onGuiRun);
      }
+
+
+      public interface OnGuiStartListener{
+         void onGuiStart(boolean isRun);
+     }
+
  }

@@ -92,18 +92,22 @@ public class GuiActivity extends AppCompatActivity {
         activity.overridePendingTransition(-1, -1);
     }
 
-    public static void laucher(Activity activity, String key,Runnable onGuiRun) {
-        if (activity instanceof GuiActivity) return;
-        IGuiDelivery model = GuiManager.getG().getGui(key);
-        if (model == null) return;
-        if (onGuiRun != null){
-            onGuiRun.run();
+    public static void launcher(Activity activity, String key, GuiJumpHelper.OnGuiStartListener onGuiRun) {
+        if (activity instanceof GuiActivity || GuiManager.getG().getGui(key) == null) {
+            safeRun(onGuiRun,false);
+            return;
         }
+        safeRun(onGuiRun,true);
         Intent intent = new Intent(activity, GuiActivity.class);
         intent.putExtra(simplNameKey, key);
         activity.startActivity(intent);
         activity.overridePendingTransition(-1, -1);
-        //启动
+    }
+
+    public static void safeRun(GuiJumpHelper.OnGuiStartListener onGuiRun,boolean isRun){
+        if (onGuiRun != null){
+            onGuiRun.onGuiStart(isRun);
+        }
     }
 
     @Override
